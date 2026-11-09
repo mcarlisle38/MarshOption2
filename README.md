@@ -8,6 +8,8 @@ Assumptions made (these would need to be clarified with customer in real world (
 		User will only encounter any text feedback when they encounter an error which will be displayed on console
 		There will only be one output file at any given time for simplicity
 			- If a previous output file already exists in the home directory then it will be overwritten
+		The 3 example files with 17 transactions across 3 files is a 'normal' load and the application will handle this load
+			- IRL we should define what the maximum load the system would need to handle and in what time frame for design
 		
 	Inputs
 		All input files will need to be dropped in the home directory of the project
@@ -26,10 +28,12 @@ Assumptions made (these would need to be clarified with customer in real world (
 			isin
 			notional
 			notional_currency
+			eur_notional - will be same value format as notional input, range 0 - 99999999.0
 			transaction_type
 			transaction_datetime
 			exchange_rate
 			legal_entity_identifier
+		The eur_notional field will be calculated by notional rate * exchange rate
 
 	Data Types
 		transaction_uti: upper case alphanumeric, max 45 characters - IRL further clarification would be required on format verification e.g. 'TRANSCATIONID' string in centre
@@ -47,3 +51,6 @@ Assumptions made (these would need to be clarified with customer in real world (
 		There will be no validation on max number of records accepted to be processed
 		There will be no streaming of input elements being picked up from input files
 			- This would be a possibility for larger datasets if required for further enhancements
+		This process will be a singleton so it is assumed there will be no writing thread contention on the output file
+		The process will require to check for write contention on the input files in case users have the input files open on their machine
+		There will be no multi-threading for files to be processed in parallel to enhance processing performance
