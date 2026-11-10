@@ -1,4 +1,27 @@
-# MarshOption2
+Setup Instructions
+
+	Required Installations
+		PC with Windows 10 or later
+		Python Manager 26.4
+		- Can be downloaded from https://www.python.org/downloads/release/pymanager-264/
+		CPython runtime 3.15.2
+		- Can be downloaded as part of Python Manager installation
+		DB4S 3.15.2 for SQLite
+		- Can be downloaded from https://sqlitebrowser.org/dl/
+		- Follow all suggested set up steps
+		
+	Running Process
+		Nagivate to python parser directory in Windows Explorer
+		Input Files Setup
+			Drop all XML, CSV & JSON files to be processed into parser directory
+		Execution
+			Double click on ParserApplication.py
+		Reading Output file
+			Double click on output_dataset.sqlite3
+			Open with DB Browser for SQLite if prompted
+			View data under Browse Data tab
+			
+________________________________________________________________________________________________________________________________________
 
 Assumptions made (these would need to be clarified with customer in real world (IRL)):
 
@@ -54,3 +77,4 @@ Assumptions made (these would need to be clarified with customer in real world (
 		This process will be a singleton so it is assumed there will be no writing thread contention on the output file
 		The process will require to check for write contention on the input files in case users have the input files open on their machine
 		There will be no multi-threading for files to be processed in parallel to enhance processing performance
+		
