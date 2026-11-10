@@ -1,0 +1,43 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from decimal import Decimal
+from pathlib import Path
+from typing import Any, Iterable, Mapping, Protocol
+
+
+class ValidationError(Exception):
+    pass
+
+
+@dataclass(frozen=True)
+class NormalizedTransaction:
+    transaction_uti: str
+    isin: str
+    notional: Decimal
+    notional_currency: str
+    eur_notional: Decimal
+    transaction_type: str
+    transaction_datetime: str
+    exchange_rate: Decimal
+    legal_entity_identifier: str
+
+
+class IFieldValidator(Protocol):
+    def normalize_transaction(self, raw: Mapping[str, Any]) -> NormalizedTransaction:
+        ...
+
+
+class IFileFormatValidator(Protocol):
+    def validate(self, file_path: Path) -> None:
+        ...
+
+
+class ITransactionParserStrategy(Protocol):
+    def parse(self, file_path: Path) -> Iterable[Mapping[str, Any]]:
+        ...
+
+
+class IFileLockChecker(Protocol):
+    def ensure_readable(self, file_path: Path) -> None:
+        ...

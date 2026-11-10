@@ -1,0 +1,53 @@
+We would like to have a process that takes in transactions data from various sources and combines them in a unified format so that in can be available to other teams and processes.
+The application should loop through every .csv, .json and .xml file in the same directory as the application is executing from, validate they are in the correct format, calculate the Eur notional rate and combine all data into one file.
+The application should check for any locks which would prevent reading any of these input files, if any of the files are locked an error should be displayed to the user on the console stating which file was locked before failing.
+The application should combine the data into a SQLite file named 'output_dataset'.
+Validation of the input files should be carried out by dependency injected validator objects which ensure the input files are in the correct format to follow the open/closed principal. The factory pattern should be followed to determine which file type currently is being processed & validation should be performed within the factory.
+The data from the fields should be validated that they are in the correct data type by a dependency injected validator object within the strategy pattern which is used for all input file formats. This would be a shared, generic validator, shared between the file formats.
+
+The input_dataset_csv.csv file in the same directory as this file is an example file for the .csv file format.
+The input_dataset_json.json file in the same directory as this file is an example file for the .json file format.
+The input_dataset_xml.xml file in the same directory as this file is an example file for the .xml file format.
+
+
+
+User Functionality
+	No text inputs required from the user, the user simply drops the input files into the home directory and executes application.
+	Output file is inserted into this same directory.
+	User will only encounter any text feedback on the console when they encounter an error.
+	There will only be one output file at any given time for simplicity.
+		- If a previous output file from a previous process already exists in the executables directory then it will be deleted by this application before writing to the output file.
+	
+Inputs
+	All input files will need to be dropped in the home directory of the project and this is where the application will look for files to proces.
+	CSV file will be comma delimited (other delimiters not accepted), header is defined as non-case sensitive. input_dataset_csv.csv is in the expected format.
+	JSON will be in valid json format within a transactions object, field keys will be non-case sensitive. input_dataset_json.json is in the expected format.
+	XML will be in valid XML format within a transactions object, element names will be non-case sensitive. input_dataset_xml.xml is in the expected format.
+	
+Output
+	Output will be in SQLite format
+	Output file will be named 'output_dataset'
+	Output file will be dropped in the same directory as the application is ran from
+	Output file will overwrite any existing files with the same filename
+	Fields will be listed as lower case and named:
+		transaction_uti
+		isin
+		notional
+		notional_currency
+		eur_notional
+		transaction_type
+		transaction_datetime
+		exchange_rate
+		legal_entity_identifier
+	Each field will be mapped to the corresponding values in the input files except the eur_notional field which will be calculated by: notional * exchange_rate
+
+Data Types and ranges for these fields
+	transaction_uti: upper case alphanumeric, max 45 characters
+	isin: alphanumeric, max 12 characters
+	notional: numeric, max 1 decimal place, range 0 - 99999999.0, must be able to handle E notation values from input file (such as 1.957E7), convert to numeric and perform calculation with this value
+	notional_currency: 3 character alphabetic, non-case sensitive
+	eur_notional: numeric, max 1 decimal place, range 0 - 99999999.0
+	transaction_type: Buy or sell the only valid inputs, non-case sensitive
+	transaction_datetime: date time format, accuracy only down to the seconds, must take into account any timezone offset values
+	exchange_rate: numeric type, must be accurate to 10 decimal places
+	legal_entity_identifier: uppercase alphanumeric, max 20 characters

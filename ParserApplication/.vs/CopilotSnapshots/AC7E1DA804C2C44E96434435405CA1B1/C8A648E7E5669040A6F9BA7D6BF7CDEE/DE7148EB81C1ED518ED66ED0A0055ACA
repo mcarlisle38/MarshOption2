@@ -1,0 +1,59 @@
+﻿from __future__ import annotations
+
+import sqlite3
+from pathlib import Path
+from typing import Iterable
+
+from parser_shared import NormalizedTransaction
+
+
+class SqliteTransactionWriter:
+    def __init__(self, output_file_path: Path) -> None:
+        self._output_file_path = output_file_path
+
+    def write(self, transactions: Iterable[NormalizedTransaction]) -> None:
+        with sqlite3.connect(self._output_file_path) as connection:
+            connection.execute(
+                """
+                CREATE TABLE output_dataset (
+                    transaction_uti TEXT NOT NULL,
+                    isin TEXT NOT NULL,
+                    notional REAL NOT NULL,
+                    notional_currency TEXT NOT NULL,
+                    eur_notional REAL NOT NULL,
+                    transaction_type TEXT NOT NULL,
+                    transaction_datetime TEXT NOT NULL,
+                    exchange_rate REAL NOT NULL,
+                    legal_entity_identifier TEXT NOT NULL
+                )
+                """
+            )
+            connection.executemany(
+                """
+                INSERT INTO output_dataset (
+                    transaction_uti,
+                    isin,
+                    notional,
+                    notional_currency,
+                    eur_notional,
+                    transaction_type,
+                    transaction_datetime,
+                    exchange_rate,
+                    legal_entity_identifier
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                [
+                    (
+                        transaction.transaction_uti,
+                        transaction.isin,
+                        float(transaction.notional),
+                        transaction.notional_currency,
+                        float(transaction.eur_notional),
+                        transaction.transaction_type,
+                        transaction.transaction_datetime,
+                        float(transaction.exchange_rate),
+                        transaction.legal_entity_identifier,
+                    )
+                    for transaction in transactions
+                ],
+            )

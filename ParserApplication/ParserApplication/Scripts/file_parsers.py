@@ -1,0 +1,44 @@
+from __future__ import annotations
+
+import csv
+import json
+from pathlib import Path
+from typing import Any, Iterable, Mapping
+import xml.etree.ElementTree as ET
+
+from Scripts.parser_shared import ITransactionParserStrategy
+
+
+class CsvParserStrategy(ITransactionParserStrategy):
+    def parse(self, file_path: Path) -> Iterable[Mapping[str, Any]]:
+        with file_path.open("r", encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle, delimiter=",")
+            for row in reader:
+                yield {str(key).lower(): value for key, value in row.items()}
+
+
+class JsonParserStrategy(ITransactionParserStrategy):
+    def parse(self, file_path: Path) -> Iterable[Mapping[str, Any]]:
+        with file_path.open("r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+
+        transactions_key = next(key for key in payload.keys() if key.lower() == "transactions")
+        for transaction in payload[transactions_key]:
+            normalized = {str(key).lower(): value for key, value in transaction.items()}
+            if "legal_entity_identifier" not in normalized and "lei" in normalized:
+                normalized["legal_entity_identifier"] = normalized["lei"]
+            yield normalized
+
+
+class XmlParserStrategy(ITransactionParserStrategy):
+    def parse(self, file_path: Path) -> Iterable[Mapping[str, Any]]:
+        tree = ET.parse(file_path)
+        root = tree.getroot()
+
+        for transaction in root:
+            if transaction.tag.lower() != "transaction":
+                continue
+            normalized = {child.tag.lower(): (child.text or "").strip() for child in transaction}
+            if "legal_entity_identifier" not in normalized and "lei" in normalized:
+                normalized["legal_entity_identifier"] = normalized["lei"]
+            yield normalized

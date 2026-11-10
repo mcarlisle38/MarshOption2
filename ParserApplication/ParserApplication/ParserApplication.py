@@ -1,0 +1,97 @@
+from __future__ import annotations
+
+import sqlite3
+from pathlib import Path
+
+from Scripts.field_validation import SharedFieldValidator
+from Scripts.file_format_validation import CsvFileFormatValidator, JsonFileFormatValidator, XmlFileFormatValidator
+from Scripts.file_parsers import CsvParserStrategy, JsonParserStrategy, XmlParserStrategy
+from Scripts.lock_checker import FileLockChecker
+from Scripts.parser_factory import TransactionParserFactory
+from Scripts.parser_shared import (
+    IFieldValidator,
+    IFileFormatValidator,
+    IFileLockChecker,
+    ITransactionParserStrategy,
+    NormalizedTransaction,
+    ValidationError,
+)
+from Scripts.transaction_writer import SqliteTransactionWriter
+
+
+class TransactionProcessorApplication:
+    _supported_extensions = {".csv", ".json", ".xml"}
+
+    def __init__(
+        self,
+        working_directory: Path,
+        parser_factory: TransactionParserFactory,
+        field_validator: IFieldValidator,
+        lock_checker: IFileLockChecker,
+    ) -> None:
+        self._working_directory = working_directory
+        self._parser_factory = parser_factory
+        self._field_validator = field_validator
+        self._lock_checker = lock_checker
+
+    def run(self) -> None:
+        input_files = self._discover_input_files()
+        for file_path in input_files:
+            self._lock_checker.ensure_readable(file_path)
+
+        transactions: list[NormalizedTransaction] = []
+        for file_path in input_files:
+            parser = self._parser_factory.create(file_path)
+            for raw_transaction in parser.parse(file_path):
+                transactions.append(self._field_validator.normalize_transaction(raw_transaction))
+
+        output_path = self._working_directory / "output_dataset.sqlite3"
+        if output_path.exists():
+            output_path.unlink()
+
+        writer = SqliteTransactionWriter(output_path)
+        writer.write(transactions)
+
+    def _discover_input_files(self) -> list[Path]:
+        files = [
+            item
+            for item in self._working_directory.iterdir()
+            if item.is_file() and item.suffix.lower() in self._supported_extensions
+        ]
+        return sorted(files, key=lambda item: item.name.lower())
+
+
+def build_application(working_directory: Path) -> TransactionProcessorApplication:
+    validators: dict[str, IFileFormatValidator] = {
+        ".csv": CsvFileFormatValidator(),
+        ".json": JsonFileFormatValidator(),
+        ".xml": XmlFileFormatValidator(),
+    }
+    strategies: dict[str, ITransactionParserStrategy] = {
+        ".csv": CsvParserStrategy(),
+        ".json": JsonParserStrategy(),
+        ".xml": XmlParserStrategy(),
+    }
+
+    parser_factory = TransactionParserFactory(validators=validators, strategies=strategies)
+    return TransactionProcessorApplication(
+        working_directory=working_directory,
+        parser_factory=parser_factory,
+        field_validator=SharedFieldValidator(),
+        lock_checker=FileLockChecker(),
+    )
+
+
+def main() -> int:
+    application_directory = Path(__file__).resolve().parent
+    application = build_application(application_directory)
+    try:
+        application.run()
+    except (ValidationError, OSError, sqlite3.DatabaseError) as ex:
+        print(str(ex))
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,27 @@
+﻿from __future__ import annotations
+
+from pathlib import Path
+from typing import Mapping
+
+from parser_shared import IFileFormatValidator, ITransactionParserStrategy, ValidationError
+
+
+class TransactionParserFactory:
+    def __init__(
+        self,
+        validators: Mapping[str, IFileFormatValidator],
+        strategies: Mapping[str, ITransactionParserStrategy],
+    ) -> None:
+        self._validators = validators
+        self._strategies = strategies
+
+    def create(self, file_path: Path) -> ITransactionParserStrategy:
+        extension = file_path.suffix.lower()
+        validator = self._validators.get(extension)
+        strategy = self._strategies.get(extension)
+
+        if validator is None or strategy is None:
+            raise ValidationError(f"Unsupported input file type: '{file_path.name}'.")
+
+        validator.validate(file_path)
+        return strategy

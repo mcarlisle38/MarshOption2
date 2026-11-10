@@ -1,0 +1,54 @@
+{
+    "transactions": [
+        {
+            "transaction_uti": "100244641TRANSCATIONID0000000000072697124",
+            "isin": "BW4886670083",
+            "notional": 19510000.0,
+            "notional_currency": "CHF",
+            "transaction_type": "SELL",
+            "transaction_datetime": "2024-12-16T14:37:01Z",
+            "exchange_rate": 0.0136050000,
+            "lei": "RS9Q00APIKAKC2NOFA25"
+        },
+        {
+            "transaction_uti": "0010045TRANSCATIONID2622005363",
+            "isin": "ML1284301709",
+            "notional": 14100000.0,
+            "notional_currency": "CHF",
+            "transaction_type": "SELL",
+            "transaction_datetime": "2024-12-17T11:52:14Z",
+            "exchange_rate": 0.0060063000,
+            "lei": "DYYH00WQNSXSW5HYAP67"
+        },
+        {
+            "transaction_uti": "000045222TRANSCATIONID1064691723",
+            "isin": "IO6658804181",
+            "notional": 12000000.0,
+            "notional_currency": "CHF",
+            "transaction_type": "Buy",
+            "transaction_datetime": "2024-12-15T14:17:29Z",
+            "exchange_rate": 0.0094600000,
+            "lei": "XQPB00K2TS6AETRXQU48"
+        },
+        {
+            "transaction_uti": "103302446413TRANSCATIONID00000000011288037249",
+            "isin": "BV0854556842",
+            "notional": 1853000.0,
+            "notional_currency": "CHF",
+            "transaction_type": "SELL",
+            "transaction_datetime": "2024-11-25T15:10:25Z",
+            "exchange_rate": 0.0061606000,
+            "lei": "UOM300EWQVBNAAJXLN62"
+        },
+        {
+            "transaction_uti": "003400452ATRANSCATIONID8896073",
+            "isin": "PY4770807520",
+            "notional": 22000000.0,
+            "notional_currency": "CHF",
+            "transaction_type": "BUY",
+            "transaction_datetime": "2024-12-17T12:05:48Z",
+            "exchange_rate": 0.0058325000,
+            "lei": "JW4B00EARPSGUBFHBE03"
+        }
+    ]
+}
