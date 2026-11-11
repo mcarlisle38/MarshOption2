@@ -166,6 +166,10 @@ class SharedFieldValidatorTests(unittest.TestCase):
         with self.assertRaises(ValidationError):
             self.normalize(exchange_rate="-0.0000000001")
 
+    def test_exchange_rate_zero_fails(self):
+        with self.assertRaises(ValidationError):
+            self.normalize(exchange_rate="0")
+
     def test_exchange_rate_non_numeric_fails(self):
         with self.assertRaises(ValidationError):
             self.normalize(exchange_rate="abc")

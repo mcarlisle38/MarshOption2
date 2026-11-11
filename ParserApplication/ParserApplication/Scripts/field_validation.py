@@ -99,8 +99,8 @@ class SharedFieldValidator(IFieldValidator):
 
     def _validate_exchange_rate(self, value: Any) -> Decimal:
         decimal_value = self._to_decimal(value, "exchange_rate")
-        if decimal_value < 0:
-            raise ValidationError("exchange_rate must be non-negative.")
+        if decimal_value <= 0:
+            raise ValidationError("exchange_rate must be positive and non-zero.")
         return decimal_value.quantize(self._ten_dp, rounding=ROUND_HALF_UP)
 
     def _validate_lei(self, value: str) -> str:
