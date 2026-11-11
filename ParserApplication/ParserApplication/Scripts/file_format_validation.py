@@ -28,7 +28,7 @@ class CsvFileFormatValidator(IFileFormatValidator):
             except StopIteration as ex:
                 raise ValidationError(f"CSV file '{file_path.name}' is empty.") from ex
 
-            normalized_header = {column.strip().lower() for column in header}
+            normalized_header = {column.strip() for column in header}
             if normalized_header != self._required_fields:
                 raise ValidationError(f"CSV file '{file_path.name}' does not contain the expected header.")
 
@@ -66,8 +66,8 @@ class JsonFileFormatValidator(IFileFormatValidator):
         for index, transaction in enumerate(transactions):
             if not isinstance(transaction, dict):
                 raise ValidationError(f"JSON file '{file_path.name}' contains non-object transaction at index {index}.")
-            keys = {str(key).lower() for key in transaction.keys()}
-            if not self._required_fields.issubset(keys):
+            keys = {str(key) for key in transaction.keys()}
+            if keys != self._required_fields:
                 raise ValidationError(f"JSON file '{file_path.name}' transaction at index {index} is missing required fields.")
 
 
@@ -95,6 +95,6 @@ class XmlFileFormatValidator(IFileFormatValidator):
 
         transaction_nodes = [node for node in root if node.tag.lower() == "transaction"]
         for index, node in enumerate(transaction_nodes):
-            children = {child.tag.lower() for child in node}
-            if not self._required_fields.issubset(children):
+            children = {child.tag for child in node}
+            if children != self._required_fields:
                 raise ValidationError(f"XML file '{file_path.name}' transaction at index {index} is missing required fields.")

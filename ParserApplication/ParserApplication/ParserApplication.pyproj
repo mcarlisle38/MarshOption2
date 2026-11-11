@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>ParserApplication</Name>
     <RootNamespace>ParserApplication</RootNamespace>
+    <TestFramework>unittest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,20 +22,43 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="field_validation.py" />
-    <Compile Include="file_format_validation.py" />
-    <Compile Include="file_parsers.py" />
-    <Compile Include="lock_checker.py" />
     <Compile Include="ParserApplication.py" />
-    <Compile Include="parser_factory.py" />
-    <Compile Include="parser_shared.py" />
-    <Compile Include="transaction_writer.py" />
+    <Compile Include="ParserApplicationTests\test_calculation_validation.py" />
+    <Compile Include="ParserApplicationTests\test_field_validation.py" />
+    <Compile Include="ParserApplicationTests\test_file_format_validation.py" />
+    <Compile Include="ParserApplicationTests\__init__.py" />
+    <Compile Include="Scripts\field_validation.py" />
+    <Compile Include="Scripts\file_format_validation.py" />
+    <Compile Include="Scripts\file_parsers.py" />
+    <Compile Include="Scripts\lock_checker.py" />
+    <Compile Include="Scripts\parser_factory.py" />
+    <Compile Include="Scripts\parser_shared.py" />
+    <Compile Include="Scripts\transaction_writer.py" />
+    <Compile Include="Scripts\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="input_dataset_csv.csv" />
     <Content Include="input_dataset_json.json" />
     <Content Include="input_dataset_xml.xml" />
     <Content Include="Instructions.txt" />
+    <Content Include="ParserApplicationTests\README.md" />
+    <Content Include="ParserApplicationTests\__pycache__\test_calculation_validation.cpython-315.pyc" />
+    <Content Include="ParserApplicationTests\__pycache__\test_field_validation.cpython-315.pyc" />
+    <Content Include="ParserApplicationTests\__pycache__\test_file_format_validation.cpython-315.pyc" />
+    <Content Include="ParserApplicationTests\__pycache__\__init__.cpython-315.pyc" />
+    <Content Include="Scripts\__pycache__\field_validation.cpython-315.pyc" />
+    <Content Include="Scripts\__pycache__\file_format_validation.cpython-315.pyc" />
+    <Content Include="Scripts\__pycache__\file_parsers.cpython-315.pyc" />
+    <Content Include="Scripts\__pycache__\lock_checker.cpython-315.pyc" />
+    <Content Include="Scripts\__pycache__\parser_factory.cpython-315.pyc" />
+    <Content Include="Scripts\__pycache__\parser_shared.cpython-315.pyc" />
+    <Content Include="Scripts\__pycache__\transaction_writer.cpython-315.pyc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ParserApplicationTests\" />
+    <Folder Include="ParserApplicationTests\__pycache__\" />
+    <Folder Include="Scripts\" />
+    <Folder Include="Scripts\__pycache__\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
