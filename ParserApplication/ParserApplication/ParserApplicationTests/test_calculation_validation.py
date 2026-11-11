@@ -54,5 +54,9 @@ class EurNotionalCalculationTests(unittest.TestCase):
         normalized = self.normalize(notional="99999999.0", exchange_rate="1")
         self.assertEqual(normalized.eur_notional, Decimal("99999999.0"))
 
+    def test_eur_notional_above_maximum_fails_validation(self):
+        with self.assertRaises(ValidationError):
+            self.normalize(notional="99999999.0", exchange_rate="2")
+
 if __name__ == "__main__":
     unittest.main()

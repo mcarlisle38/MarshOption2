@@ -65,7 +65,7 @@ Assumptions made (these would need to be clarified with customer in real world (
 		notional_currency: 3 character alphabetic, non-case sensitive
 		transaction_type: Buy or sell the only valid inputs, non-case sensitive
 		transaction_datetime: date time format, accuracy only down to the seconds (no ms), must take into account timezone offsets
-		exchange_rate: numeric type, must be accurate to 10 decimal places, calculations would ideally be performed using fixed point numeric type
+		exchange_rate: numeric type, must be accurate to 10 decimal places, calculations would ideally be performed using fixed point numeric type, cannot be 0 or negative
 		legal_entity_identifier: uppercase alphanumeric, max 20 characters
 		
 	Functionality

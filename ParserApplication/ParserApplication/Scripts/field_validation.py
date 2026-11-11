@@ -109,10 +109,9 @@ class SharedFieldValidator(IFieldValidator):
         return value
 
     def _validate_eur_notional(self, value: Decimal) -> Decimal:
-        rounded = value.quantize(self._one_dp, rounding=ROUND_HALF_UP)
-        if rounded < 0 or rounded > self._max_notional:
+        if value < 0 or value > self._max_notional:
             raise ValidationError("eur_notional is outside the accepted range.")
-        return rounded
+        return value.quantize(self._one_dp, rounding=ROUND_HALF_UP)
 
     def _to_decimal(self, value: Any, field_name: str) -> Decimal:
         try:
