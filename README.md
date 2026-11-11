@@ -12,6 +12,8 @@ Setup Instructions
 		
 	Running Process
 		Nagivate to python parser directory in Windows Explorer
+			This is the directory:
+				ParserApplication/ParserApplication
 		Input Files Setup
 			Drop all XML, CSV & JSON files to be processed into parser directory
 		Execution
@@ -19,7 +21,7 @@ Setup Instructions
 		Reading Output file
 			Double click on output_dataset.sqlite3
 			Open with DB Browser for SQLite if prompted
-			View data under Browse Data tab
+			View collated data under Browse Data tab
 			
 ________________________________________________________________________________________________________________________________________
 
